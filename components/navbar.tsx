@@ -13,10 +13,10 @@ import {
 } from '@/components/ui/sheet';
 
 const navLinks = [
-  { href: '#tentang', label: 'Tentang' },
-  { href: '#layanan', label: 'Layanan' },
-  { href: '#katalog', label: 'Katalog' },
-  { href: '#portofolio', label: 'Portofolio' },
+  { href: '/tentang', label: 'Tentang' },
+  { href: '/layanan', label: 'Layanan' },
+  { href: '/katalog', label: 'Katalog' },
+  { href: '/#portofolio', label: 'Portofolio' },
 ];
 
 export default function Navbar() {
@@ -74,7 +74,7 @@ export default function Navbar() {
             className="hidden md:inline-flex h-10 px-5 text-[15px] font-normal bg-[#000000] text-[#ffffff] rounded-none border-0 hover:bg-[#878787] transition-colors duration-200 cursor-pointer"
             style={{ fontFamily: "Inter, system-ui, sans-serif" }}
           >
-            <Link href="#kontak">Hubungi Kami</Link>
+            <Link href="/kontak">Hubungi Kami</Link>
           </Button>
 
           {/* Mobile hamburger */}
@@ -120,7 +120,7 @@ export default function Navbar() {
                   className="w-full h-12 text-[15px] font-normal bg-[#000000] text-[#ffffff] rounded-none border-0 hover:bg-[#878787] transition-colors duration-200"
                   style={{ fontFamily: "Inter, system-ui, sans-serif" }}
                 >
-                  <Link href="#kontak" onClick={() => setMobileOpen(false)}>
+                  <Link href="/kontak" onClick={() => setMobileOpen(false)}>
                     Hubungi Kami
                   </Link>
                 </Button>
