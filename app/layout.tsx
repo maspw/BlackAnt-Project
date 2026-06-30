@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Old_Standard_TT, Inter } from "next/font/google";
 import "./globals.css";
+import FloatingWhatsApp from "@/components/FloatingWhatsApp";
 
 const oldStandardTT = Old_Standard_TT({
   variable: "--font-old-standard-tt",
@@ -34,6 +35,7 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col bg-[#ffffff] text-[#000000]">
         {children}
+        <FloatingWhatsApp />
       </body>
     </html>
   );
