@@ -1,6 +1,6 @@
 'use client';
 
-const WA_NUMBER = '6285731813118';
+const WA_NUMBER = '6283821431377';
 const WA_URL = `https://wa.me/${WA_NUMBER}`;
 
 export default function FloatingWhatsApp() {

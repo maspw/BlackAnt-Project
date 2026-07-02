@@ -2,15 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { Menu, X } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from '@/components/ui/sheet';
 
 const navLinks = [
   { href: '/tentang', label: 'Tentang' },
@@ -20,115 +13,154 @@ const navLinks = [
 ];
 
 export default function Navbar() {
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [mobileOpen, setMobileOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const [open, setOpen] = useState(false);
+  const pathname = usePathname();
 
   useEffect(() => {
-    const handleScroll = () => setIsScrolled(window.scrollY > 8);
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+    const onScroll = () => setScrolled(window.scrollY > 8);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  return (
-    <header
-      className={`fixed top-0 left-0 right-0 z-50 w-full bg-[#ffffff] transition-all duration-300 ${
-        isScrolled ? 'border-b border-[#e5e5e5]' : 'border-b border-transparent'
-      }`}
-    >
-      <div className="mx-auto flex h-16 max-w-[1200px] items-center justify-between px-6 md:px-8">
-        {/* Logo */}
-        <Link href="/" className="flex items-center gap-2 shrink-0" aria-label="Blackant Home">
-          <span
-            className="text-[23px] font-bold tracking-tight text-[#000000] select-none"
-            style={{ fontFamily: "'Old Standard TT', 'EB Garamond', Georgia, serif" }}
-          >
-            blackant
-          </span>
-          <span
-            className="hidden sm:inline-block text-[15px] font-normal text-[#878787] leading-none"
-            style={{ fontFamily: "Inter, system-ui, sans-serif" }}
-          >
-            studio
-          </span>
-        </Link>
+  // Tutup menu saat navigasi
+  useEffect(() => {
+    setOpen(false);
+  }, [pathname]);
 
-        {/* Desktop Nav — center */}
-        <nav className="hidden md:flex items-center gap-1" aria-label="Main navigation">
-          {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className="px-[26px] py-[3px] text-[15px] font-normal text-[#000000] no-underline transition-all duration-150 hover:underline underline-offset-4"
-              style={{ fontFamily: "Inter, system-ui, sans-serif" }}
+  // Lock scroll saat menu terbuka
+  useEffect(() => {
+    document.body.style.overflow = open ? 'hidden' : '';
+    return () => { document.body.style.overflow = ''; };
+  }, [open]);
+
+  const close = () => setOpen(false);
+
+  return (
+    <>
+      {/* ── Navbar bar ────────────────────────────────────── */}
+      <header
+        className={`fixed top-0 inset-x-0 z-[100] bg-white transition-all duration-300 ${
+          scrolled ? 'border-b border-[#e5e5e5]' : ''
+        }`}
+      >
+        <div className="mx-auto flex h-16 max-w-[1200px] items-center justify-between px-6 md:px-8">
+
+          {/* Logo */}
+          <Link
+            href="/"
+            onClick={close}
+            className="flex items-baseline gap-2 select-none"
+            aria-label="Blackant Studio"
+          >
+            <span
+              className="text-[22px] font-bold text-black leading-none"
+              style={{ fontFamily: "'Old Standard TT', Georgia, serif" }}
             >
-              {link.label}
+              blackant
+            </span>
+            <span
+              className="hidden sm:block text-[14px] text-[#878787] leading-none"
+              style={{ fontFamily: 'Inter, system-ui, sans-serif' }}
+            >
+              studio
+            </span>
+          </Link>
+
+          {/* Desktop nav */}
+          <nav className="hidden md:flex items-center gap-1" aria-label="Navigasi utama">
+            {navLinks.map(({ href, label }) => (
+              <Link
+                key={href}
+                href={href}
+                className="px-5 py-1 text-[14px] text-black no-underline hover:underline underline-offset-4 transition-all"
+                style={{ fontFamily: 'Inter, system-ui, sans-serif' }}
+              >
+                {label}
+              </Link>
+            ))}
+          </nav>
+
+          {/* Desktop CTA + hamburger */}
+          <div className="flex items-center gap-2">
+            <Link
+              href="/kontak"
+              className="hidden md:flex items-center h-9 px-5 bg-black text-white text-[14px] font-normal hover:bg-[#333] transition-colors"
+              style={{ fontFamily: 'Inter, system-ui, sans-serif' }}
+            >
+              Hubungi Kami
+            </Link>
+
+            {/* Hamburger — HANYA useState, zero library */}
+            <button
+              type="button"
+              onClick={() => setOpen((v) => !v)}
+              aria-label={open ? 'Tutup menu' : 'Buka menu'}
+              aria-expanded={open}
+              className="md:hidden flex items-center justify-center w-10 h-10 text-black"
+            >
+              {open ? <X size={22} strokeWidth={1.5} /> : <Menu size={22} strokeWidth={1.5} />}
+            </button>
+          </div>
+        </div>
+      </header>
+
+      {/* ── Full-screen mobile overlay ─────────────────────── */}
+      {/*
+          Overlay ini di-render di luar <header> sehingga tidak ada
+          z-index conflict. Animasi pakai CSS transition pada opacity
+          dan translateY — tidak butuh library apapun.
+      */}
+      <div
+        aria-hidden={!open}
+        className="md:hidden"
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          zIndex: 99,
+          backgroundColor: 'white',
+          display: 'flex',
+          flexDirection: 'column',
+          paddingTop: '64px', // tinggi navbar
+          opacity: open ? 1 : 0,
+          transform: open ? 'translateY(0)' : 'translateY(-12px)',
+          transition: 'opacity 0.25s ease, transform 0.25s ease',
+          pointerEvents: open ? 'auto' : 'none',
+        }}
+      >
+        <nav
+          className="flex flex-col px-6 pt-4"
+          aria-label="Navigasi mobile"
+        >
+          {navLinks.map(({ href, label }, i) => (
+            <Link
+              key={href}
+              href={href}
+              onClick={close}
+              className={`py-5 text-[20px] font-normal text-black no-underline hover:text-[#878787] transition-colors ${
+                i < navLinks.length - 1 ? 'border-b border-[#efefef]' : ''
+              }`}
+              style={{ fontFamily: 'Inter, system-ui, sans-serif' }}
+            >
+              {label}
             </Link>
           ))}
         </nav>
 
-        {/* CTA + Mobile Trigger */}
-        <div className="flex items-center gap-3">
-          {/* Desktop CTA */}
-          <Button
-            asChild
-            className="hidden md:inline-flex h-10 px-5 text-[15px] font-normal bg-[#000000] text-[#ffffff] rounded-none border-0 hover:bg-[#878787] transition-colors duration-200 cursor-pointer"
-            style={{ fontFamily: "Inter, system-ui, sans-serif" }}
+        <div className="px-6 pt-6">
+          <Link
+            href="/kontak"
+            onClick={close}
+            className="flex items-center justify-center h-12 w-full bg-black text-white text-[15px] font-normal hover:bg-[#333] transition-colors"
+            style={{ fontFamily: 'Inter, system-ui, sans-serif' }}
           >
-            <Link href="/kontak">Hubungi Kami</Link>
-          </Button>
-
-          {/* Mobile hamburger */}
-          <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
-            <SheetTrigger asChild>
-              <button
-                aria-label="Buka menu"
-                className="md:hidden flex items-center justify-center w-10 h-10 text-[#000000] hover:text-[#878787] transition-colors"
-              >
-                {mobileOpen ? <X size={22} strokeWidth={1.5} /> : <Menu size={22} strokeWidth={1.5} />}
-              </button>
-            </SheetTrigger>
-            <SheetContent
-              side="right"
-              className="w-[280px] bg-[#ffffff] border-l border-[#e5e5e5] p-0"
-            >
-              <SheetHeader className="px-6 pt-6 pb-4 border-b border-[#e5e5e5]">
-                <SheetTitle
-                  className="text-left text-[21px] font-normal text-[#000000]"
-                  style={{ fontFamily: "'Old Standard TT', Georgia, serif" }}
-                >
-                  blackant
-                </SheetTitle>
-              </SheetHeader>
-
-              <nav className="flex flex-col px-6 py-4 gap-0" aria-label="Mobile navigation">
-                {navLinks.map((link) => (
-                  <Link
-                    key={link.href}
-                    href={link.href}
-                    onClick={() => setMobileOpen(false)}
-                    className="py-4 text-[18px] font-normal text-[#000000] border-b border-[#e5e5e5] hover:text-[#878787] transition-colors duration-150 no-underline"
-                    style={{ fontFamily: "Inter, system-ui, sans-serif" }}
-                  >
-                    {link.label}
-                  </Link>
-                ))}
-              </nav>
-
-              <div className="px-6 pt-6">
-                <Button
-                  asChild
-                  className="w-full h-12 text-[15px] font-normal bg-[#000000] text-[#ffffff] rounded-none border-0 hover:bg-[#878787] transition-colors duration-200"
-                  style={{ fontFamily: "Inter, system-ui, sans-serif" }}
-                >
-                  <Link href="/kontak" onClick={() => setMobileOpen(false)}>
-                    Hubungi Kami
-                  </Link>
-                </Button>
-              </div>
-            </SheetContent>
-          </Sheet>
+            Hubungi Kami
+          </Link>
         </div>
       </div>
-    </header>
+    </>
   );
 }

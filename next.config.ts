@@ -9,6 +9,8 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  // Izinkan akses HMR dari device lain di jaringan lokal (untuk test mobile)
+  allowedDevOrigins: ['192.168.1.9'],
 };
 
 export default nextConfig;

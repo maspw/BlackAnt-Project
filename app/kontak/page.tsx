@@ -24,18 +24,18 @@ import Navbar from '@/components/navbar';
 import Footer from '@/components/footer';
 
 /* ─── Konstanta ─────────────────────────────────────────────── */
-const WA_NUMBER = '6285731813118'; // Ganti nomor WA di sini
+const WA_NUMBER = '6283821431377'; // Ganti nomor WA di sini
 
 const contactInfo = [
   {
     icon: MapPin,
     label: 'Alamat',
-    value: 'Jl. Raya Konveksi No. 12, Cipadu, Larangan\nTangerang, Banten 15155',
+    value: 'Jl. Raya Marga Asih, c5no15, Kec. Margaasih,\n Kabupaten Bandung, Jawa Barat 40215',
   },
   {
     icon: Phone,
     label: 'WhatsApp',
-    value: '+62 857-3181-3118',
+    value: '+62 838-2143-1377',
     href: `https://wa.me/${WA_NUMBER}`,
   },
   {
