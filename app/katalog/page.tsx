@@ -38,7 +38,7 @@ function ProductCard({ product }: { product: Product }) {
   const imageSrc = product.image_url ?? '/images/kaos1.jpeg'; // fallback
 
   return (
-    <article className="flex flex-col">
+    <Link href={`/katalog/${product.id}`} className="group flex flex-col no-underline">
       {/* Image — aspect ratio 4:5 via padded wrapper */}
       <div className="relative w-full overflow-hidden" style={{ paddingBottom: '125%' }}>
         <Image
@@ -46,10 +46,11 @@ function ProductCard({ product }: { product: Product }) {
           alt={product.name}
           fill
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-          className="object-cover transition-transform duration-500 ease-out hover:scale-105"
+          className="object-cover transition-transform duration-500 ease-out group-hover:scale-105"
           style={{ objectPosition: 'center top' }}
         />
       </div>
+
 
       {/* Caption stack */}
       <div className="pt-[13px] flex flex-col gap-[6px]">
@@ -94,7 +95,7 @@ function ProductCard({ product }: { product: Product }) {
           </p>
         )}
       </div>
-    </article>
+    </Link>
   );
 }
 
