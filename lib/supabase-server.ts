@@ -1,14 +1,20 @@
 /**
  * lib/supabase-server.ts
  *
- * Membuat Supabase client baru setiap kali dipanggil — pola yang benar
- * untuk React Server Components (RSC) agar setiap request mendapat
- * instance yang fresh, tidak berbagi state antar request.
+ * Factory function untuk Supabase client di React Server Components (RSC).
  *
- * Gunakan file ini (bukan lib/supabaseClient.ts) di Server Components
- * dan Server Actions.
+ * Membuat instance BARU setiap kali dipanggil — ini pola yang benar untuk RSC
+ * agar tidak ada shared state antar request yang masuk secara bersamaan.
+ *
+ * Jangan gunakan singleton (lib/supabaseClient.ts) di Server Components.
+ *
+ * Contoh penggunaan di RSC:
+ *   const supabase = createServerSupabaseClient();
+ *   const { data } = await supabase.from('products').select('*');
+ *   // data diinfer sebagai Product[] secara otomatis
  */
 import { createClient } from '@supabase/supabase-js';
+import type { Database } from '@/types/database';
 
 export function createServerSupabaseClient() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -22,5 +28,5 @@ export function createServerSupabaseClient() {
     );
   }
 
-  return createClient(url, key);
+  return createClient<Database>(url, key);
 }

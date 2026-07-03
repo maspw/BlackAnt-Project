@@ -2,6 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import type { Metadata } from 'next';
 import { createServerSupabaseClient } from '@/lib/supabase-server';
+import type { Product } from '@/types/database';
 import { Badge } from '@/components/ui/badge';
 import Navbar from '@/components/navbar';
 import Footer from '@/components/footer';
@@ -12,15 +13,8 @@ export const metadata: Metadata = {
     'Jelajahi koleksi produk custom apparel Blackant Studio. Kaos, polo, hoodie, dan lainnya — dibuat dengan kualitas terbaik.',
 };
 
-/* ─── Type ──────────────────────────────────────────────────── */
-interface Product {
-  id: number | string;
-  name: string;
-  category: string;
-  description: string | null;
-  image_url: string | null;
-  price?: number | null;
-}
+/* ─── Type — diimport dari @/types/database ─────────────────── */
+// Product interface sudah di-export dari types/database.ts
 
 /* ─── Data fetching (Server Component) ─────────────────────── */
 async function getProducts(): Promise<Product[]> {

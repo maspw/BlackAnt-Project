@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
+import type { Database } from '@/types/database';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
@@ -18,12 +19,13 @@ if (!supabaseAnonKey) {
 }
 
 /**
- * Supabase browser client — singleton.
+ * Supabase browser client — singleton, typed dengan Database schema.
  *
- * Gunakan instance ini di Client Components dan Server Components (RSC)
- * untuk operasi yang tidak memerlukan autentikasi pengguna (public data).
+ * Gunakan instance ini di Client Components untuk operasi publik
+ * (tanpa autentikasi pengguna).
  *
- * Untuk operasi yang memerlukan session/auth cookie, gunakan createServerClient
- * dari @supabase/ssr sebagai gantinya.
+ * Contoh penggunaan:
+ *   const { data } = await supabase.from('products').select('*');
+ *   // data akan diinfer sebagai Product[] secara otomatis
  */
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey);
