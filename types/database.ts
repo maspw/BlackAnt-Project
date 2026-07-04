@@ -197,9 +197,9 @@ export interface Order {
   /** Nomor pesanan unik, misal "BLK-2024-0042" */
   order_number: string;
   /** Nama lengkap klien */
-  client_name: string;
+  customer_name: string;
   /** Nomor WhatsApp klien (format 628xxx) */
-  client_wa: string | null;
+  customer_wa: string | null;
   /** Nama produk / item yang dipesan */
   item_name: string;
   /** Kategori produk, misal "Kaos", "Polo", "Hoodie" */
@@ -214,6 +214,8 @@ export interface Order {
   total_paid: number;
   /** Status pesanan */
   status: OrderStatus;
+  priority?: string | null;
+  source?: string | null;
   /** Tanggal estimasi selesai produksi */
   due_date: string | null;
   /** Detail / catatan tambahan dari klien */
@@ -342,7 +344,8 @@ export interface OrderWithRelations extends Order {
 export interface OrderSummary {
   id: string;
   order_number: string;
-  client_name: string;
+  customer_name: string;
+  customer_wa?: string | null;
   item_name: string;
   quantity: number;
   total_price: number | null;

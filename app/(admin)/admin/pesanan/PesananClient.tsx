@@ -160,7 +160,7 @@ function OrderModal({ order, onClose }: OrderModalProps) {
           {/* Info grid */}
           <div className="grid grid-cols-2 gap-x-4 gap-y-4">
             {[
-              { icon: User,     label: 'Klien',    value: order.client_name },
+              { icon: User,     label: 'Klien',    value: order.customer_name },
               { icon: Package,  label: 'Item',     value: `${order.item_name}` },
               { icon: Package,  label: 'Kuantitas',value: `${order.quantity} pcs` },
               { icon: Calendar, label: 'Deadline', value: order.due_date ? formatTanggalIndo(order.due_date, { short: true }) : '—' },
@@ -495,9 +495,9 @@ export default function PesananClient({ orders, activeFilter }: PesananClientPro
                         <span
                           className="text-[13px] font-medium text-white truncate block"
                           style={{ fontFamily: FONT_UI }}
-                          title={order.client_name}
+                          title={order.customer_name}
                         >
-                          {order.client_name}
+                          {order.customer_name}
                         </span>
                       </div>
                     </td>

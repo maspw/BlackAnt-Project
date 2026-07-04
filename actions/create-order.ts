@@ -98,19 +98,21 @@ export async function createOrder(
 
   /* ── 3. Insert order ────────────────────────────────────── */
   const { error } = await supabase.from('orders').insert({
-    order_number:  orderNumber,
-    client_name:   nama,
-    client_wa:     clientWa,
-    item_name:     jenis,
-    category:      jenis,
-    quantity:      jumlah,
-    notes:         detail,
-    status:        'pending',
-    total_paid:    0,
-    price_per_unit:null,
-    total_price:   null,
-    due_date:      null,
-    design_url:    null,
+    order_number:   orderNumber,
+    customer_name:  nama,
+    customer_wa:    clientWa,
+    item_name:      jenis,
+    category:       jenis,
+    quantity:       jumlah,
+    notes:          detail,
+    status:         'pending',
+    priority:       'normal',
+    source:         'website',
+    total_paid:     0,
+    price_per_unit: null,
+    total_price:    null,
+    due_date:       null,
+    design_url:     null,
   });
 
   if (error) {
