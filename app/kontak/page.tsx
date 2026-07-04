@@ -24,7 +24,7 @@ import {
 import Navbar from '@/components/navbar';
 import Footer from '@/components/footer';
 import SubmitButton from './submit-button';
-import { submitInquiry, type InquiryActionState } from '@/actions/inquiry';
+import { createOrder, type CreateOrderState } from '@/actions/create-order';
 
 /* ─── Constants ─────────────────────────────────────────────── */
 const WA_NUMBER = '6283821431377';
@@ -66,7 +66,7 @@ const jenisOptions = [
   'Lainnya',
 ];
 
-const initialState: InquiryActionState = { status: 'idle' };
+const initialState: CreateOrderState = { status: 'idle' };
 
 /* ─── Field Error ───────────────────────────────────────────── */
 function FieldError({ messages }: { messages?: string[] }) {
@@ -91,16 +91,8 @@ const inputClass =
 
 /* ─── Page ──────────────────────────────────────────────────── */
 export default function KontakPage() {
-  const [state, formAction] = useActionState(submitInquiry, initialState);
+  const [state, formAction] = useActionState(createOrder, initialState);
   const formRef = useRef<HTMLFormElement>(null);
-
-  // Saat Server Action berhasil → buka WhatsApp di tab baru & reset form
-  useEffect(() => {
-    if (state.status === 'success' && state.waUrl) {
-      window.open(state.waUrl, '_blank', 'noopener,noreferrer');
-      formRef.current?.reset();
-    }
-  }, [state]);
 
   return (
     <>
@@ -248,20 +240,7 @@ export default function KontakPage() {
                 </div>
               )}
 
-              {state.status === 'success' && (
-                <div
-                  className="flex items-start gap-3 p-4 mb-6 border border-green-200 bg-green-50"
-                  role="status"
-                >
-                  <CheckCircle2 size={16} className="text-green-600 shrink-0 mt-0.5" />
-                  <p
-                    className="text-[14px] text-green-700"
-                    style={{ fontFamily: 'Inter, system-ui, sans-serif' }}
-                  >
-                    Pesan berhasil diformat! WhatsApp akan terbuka sebentar lagi.
-                  </p>
-                </div>
-              )}
+
 
               {/* ── Form ────────────────────────────────── */}
               <form
