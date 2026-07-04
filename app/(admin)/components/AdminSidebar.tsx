@@ -11,11 +11,13 @@ import {
   ChevronRight,
   Users,
   Truck,
+  FileText,
 } from 'lucide-react';
 
 /* ─── Nav items ─────────────────────────────────────────────── */
 const navItems = [
   { label: 'Dashboard',  href: '/admin/dashboard', icon: LayoutDashboard },
+  { label: 'Penawaran',  href: '/admin/quotation', icon: FileText },
   { label: 'Pesanan',    href: '/admin/pesanan',   icon: ShoppingBag },
   { label: 'Bahan',      href: '/admin/bahan',     icon: Package },
   { label: 'Pemasok',    href: '/admin/supplier',  icon: Truck },
