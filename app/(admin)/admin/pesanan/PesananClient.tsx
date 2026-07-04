@@ -161,7 +161,7 @@ function OrderModal({ order, onClose }: OrderModalProps) {
           <div className="grid grid-cols-2 gap-x-4 gap-y-4">
             {[
               { icon: User,     label: 'Klien',    value: order.customer_name },
-              { icon: Package,  label: 'Item',     value: `${order.item_name}` },
+              { icon: Package,  label: 'Item',     value: `${order.product_type}` },
               { icon: Package,  label: 'Kuantitas',value: `${order.quantity} pcs` },
               { icon: Calendar, label: 'Deadline', value: order.due_date ? formatTanggalIndo(order.due_date, { short: true }) : '—' },
             ].map(({ icon: Icon, label, value }) => (
@@ -507,9 +507,9 @@ export default function PesananClient({ orders, activeFilter }: PesananClientPro
                       <span
                         className="text-[13px] truncate block"
                         style={{ color: '#acadae', fontFamily: FONT_UI }}
-                        title={order.item_name}
+                        title={order.product_type}
                       >
-                        {order.item_name}
+                        {order.product_type}
                       </span>
                       <span className="text-[11px]" style={{ color: '#34353c', fontFamily: FONT_MONO }}>
                         {order.quantity} pcs

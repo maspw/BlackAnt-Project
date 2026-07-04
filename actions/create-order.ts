@@ -100,8 +100,8 @@ export async function createOrder(
   const { error } = await supabase.from('orders').insert({
     order_number:   orderNumber,
     customer_name:  nama,
-    customer_wa:    clientWa,
-    item_name:      jenis,
+    customer_phone: clientWa,
+    product_type:   jenis,
     category:       jenis,
     quantity:       jumlah,
     notes:          detail,

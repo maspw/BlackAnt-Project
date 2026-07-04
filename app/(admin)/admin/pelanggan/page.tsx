@@ -40,7 +40,7 @@ async function getCustomerCRMData(): Promise<CustomerWithStats[]> {
   // Hanya ambil field yang diperlukan untuk efisiensi
   const { data: ordersData, error: errO } = await supabase
     .from('orders')
-    .select('customer_wa, total_price, created_at, status');
+    .select('customer_phone, total_price, created_at, status');
 
   if (errO) {
     console.error('[crm] getOrders error:', errO.message);
@@ -51,7 +51,7 @@ async function getCustomerCRMData(): Promise<CustomerWithStats[]> {
   const crmData: CustomerWithStats[] = customers.map((c) => {
     const cPhone = normalizeWa(c.phone);
     const customerOrders = orders.filter(
-      (o) => normalizeWa(o.customer_wa) === cPhone
+      (o) => normalizeWa(o.customer_phone) === cPhone
     );
 
     const validOrders = customerOrders.filter((o) => o.status !== 'cancelled');

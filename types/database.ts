@@ -199,9 +199,9 @@ export interface Order {
   /** Nama lengkap klien */
   customer_name: string;
   /** Nomor WhatsApp klien (format 628xxx) */
-  customer_wa: string | null;
+  customer_phone: string | null;
   /** Nama produk / item yang dipesan */
-  item_name: string;
+  product_type: string;
   /** Kategori produk, misal "Kaos", "Polo", "Hoodie" */
   category: string | null;
   /** Total kuantitas (pcs) */
@@ -345,8 +345,8 @@ export interface OrderSummary {
   id: string;
   order_number: string;
   customer_name: string;
-  customer_wa?: string | null;
-  item_name: string;
+  customer_phone?: string | null;
+  product_type: string;
   quantity: number;
   total_price: number | null;
   total_paid: number;
