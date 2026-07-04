@@ -106,6 +106,12 @@ export interface Database {
         Update: SupplierUpdate;
         Relationships: never[];
       };
+      qc_records: {
+        Row: QcRecord;
+        Insert: QcRecordInsert;
+        Update: QcRecordUpdate;
+        Relationships: never[];
+      };
     };
     Views: Record<string, never>;
     Functions: Record<string, never>;
@@ -252,6 +258,7 @@ export type Order = {
   dp_amount: number;
   /** Status pesanan */
   status: OrderStatus;
+  qc_status?: 'pending' | 'passed' | 'revised' | 'rejected' | null;
   priority?: string | null;
   source?: string | null;
   /** Tanggal estimasi selesai produksi */
@@ -269,6 +276,26 @@ export type OrderInsert = Omit<Order, 'id' | 'created_at' | 'updated_at'> & {
 };
 
 export type OrderUpdate = Partial<OrderInsert>;
+
+/* ─── Tabel: qc_records ──────────────────────────────────────── */
+export type QcRecord = {
+  id: string;
+  order_id: string | null;
+  inspector_name: string | null;
+  check_date: string | null;
+  status: 'pending' | 'passed' | 'revised' | 'rejected';
+  defect_count: number;
+  notes: string | null;
+  checklist_data: Record<string, boolean> | null;
+  created_at: string;
+}
+
+export type QcRecordInsert = Omit<QcRecord, 'id' | 'created_at'> & {
+  id?: string;
+  created_at?: string;
+};
+
+export type QcRecordUpdate = Partial<QcRecordInsert>;
 
 /* ─── Tabel: order_materials ─────────────────────────────────── */
 /**
