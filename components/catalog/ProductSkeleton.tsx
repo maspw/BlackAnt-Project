@@ -1,7 +1,7 @@
 /* ─── Shimmer animation ─────────────────────────────────────── */
-function Shimmer({ className }: { className: string }) {
+function Shimmer({ className, style }: { className: string; style?: React.CSSProperties }) {
   return (
-    <div className={`bg-[#f0f0f0] animate-pulse relative overflow-hidden ${className}`}>
+    <div className={`bg-[#f0f0f0] animate-pulse relative overflow-hidden ${className}`} style={style}>
       <div
         className="absolute inset-0 -translate-x-full animate-[shimmer_1.5s_infinite]"
         style={{

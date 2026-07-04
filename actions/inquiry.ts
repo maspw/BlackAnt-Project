@@ -8,22 +8,22 @@ const WA_NUMBER = '6285731813118';
 /* ─── Zod Schema ────────────────────────────────────────────── */
 const InquirySchema = z.object({
   nama: z
-    .string({ required_error: 'Nama wajib diisi.' })
+    .string({ message: 'Nama wajib diisi.' })
     .min(2, 'Nama minimal 2 karakter.')
     .max(100, 'Nama terlalu panjang.'),
 
   whatsapp: z
-    .string({ required_error: 'Nomor WhatsApp wajib diisi.' })
+    .string({ message: 'Nomor WhatsApp wajib diisi.' })
     .min(8, 'Nomor WhatsApp tidak valid.')
     .max(15, 'Nomor WhatsApp tidak valid.')
     .regex(/^[0-9+\-\s()]+$/, 'Nomor WhatsApp hanya boleh berisi angka.'),
 
   jenis: z
-    .string({ required_error: 'Jenis pakaian wajib dipilih.' })
+    .string({ message: 'Jenis pakaian wajib dipilih.' })
     .min(1, 'Jenis pakaian wajib dipilih.'),
 
   jumlah: z
-    .string({ required_error: 'Estimasi jumlah wajib diisi.' })
+    .string({ message: 'Estimasi jumlah wajib diisi.' })
     .min(1, 'Estimasi jumlah wajib diisi.')
     .refine((val) => {
       const n = Number(val);
@@ -31,7 +31,7 @@ const InquirySchema = z.object({
     }, 'Jumlah harus berupa angka lebih dari 0.'),
 
   detail: z
-    .string({ required_error: 'Detail pesanan wajib diisi.' })
+    .string({ message: 'Detail pesanan wajib diisi.' })
     .min(10, 'Detail pesanan minimal 10 karakter.')
     .max(1000, 'Detail pesanan maksimal 1000 karakter.'),
 });

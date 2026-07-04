@@ -221,9 +221,8 @@ export default async function DashboardPage() {
       <div className="flex items-end justify-between">
         <div>
           <p
-            className="text-[12px] uppercase tracking-widest mb-1.5"
+            className="text-[12px] uppercase tracking-widest mb-1.5 font-sans"
             style={{ color: '#acadae' }}
-            className="font-sans"
           >
             Overview
           </p>

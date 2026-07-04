@@ -41,7 +41,7 @@ export async function updateOrderStatus(
 
   const supabase = createServerSupabaseClient();
 
-  const updatePayload: Record<string, unknown> = {
+  const updatePayload: any = {
     status,
     updated_at: new Date().toISOString(),
   };

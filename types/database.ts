@@ -11,7 +11,7 @@
  */
 
 /* ─── Tabel: products ───────────────────────────────────────── */
-export interface Product {
+export type Product = {
   id: string;
   name: string;
   category: string;
@@ -30,7 +30,7 @@ export type ProductInsert = Omit<Product, 'id' | 'created_at'> & {
 export type ProductUpdate = Partial<ProductInsert>;
 
 /* ─── Tabel: portfolio ──────────────────────────────────────── */
-export interface Portfolio {
+export type Portfolio = {
   id: string;
   title: string;
   category: string;
@@ -56,36 +56,49 @@ export interface Database {
         Row: Product;
         Insert: ProductInsert;
         Update: ProductUpdate;
+        Relationships: never[];
       };
       portfolio: {
         Row: Portfolio;
         Insert: PortfolioInsert;
         Update: PortfolioUpdate;
+        Relationships: never[];
       };
       materials: {
         Row: Material;
         Insert: MaterialInsert;
         Update: MaterialUpdate;
+        Relationships: never[];
       };
       orders: {
         Row: Order;
         Insert: OrderInsert;
         Update: OrderUpdate;
+        Relationships: never[];
       };
       order_materials: {
         Row: OrderMaterial;
         Insert: OrderMaterialInsert;
         Update: OrderMaterialUpdate;
+        Relationships: never[];
       };
       journal_entries: {
         Row: JournalEntry;
         Insert: JournalEntryInsert;
         Update: JournalEntryUpdate;
+        Relationships: never[];
       };
       transactions: {
         Row: Transaction;
         Insert: TransactionInsert;
         Update: TransactionUpdate;
+        Relationships: never[];
+      };
+      customers: {
+        Row: Customer;
+        Insert: CustomerInsert;
+        Update: CustomerUpdate;
+        Relationships: never[];
       };
     };
     Views: Record<string, never>;
@@ -133,7 +146,7 @@ export type TransactionType = 'income' | 'expense';
 export type CustomerCategory = 'vip' | 'wholesale' | 'regular' | 'retail';
 
 /* ─── Tabel: customers ───────────────────────────────────────── */
-export interface Customer {
+export type Customer = {
   id: string;
   name: string;
   phone: string;
@@ -158,7 +171,7 @@ export type CustomerUpdate = Partial<CustomerInsert>;
  * Stok bahan baku (kain, benang, sablon, dll.)
  * Digunakan untuk mencatat inventory dan menghitung HPP per order.
  */
-export interface Material {
+export type Material = {
   id: string;
   /** Nama bahan, misal "Kain Cotton Combed 30s" */
   name: string;
@@ -192,7 +205,7 @@ export type MaterialUpdate = Partial<MaterialInsert>;
  * Setiap order memiliki banyak order_materials (detail bahan)
  * dan banyak transactions (riwayat pembayaran).
  */
-export interface Order {
+export type Order = {
   id: string;
   /** Nomor pesanan unik, misal "BLK-2024-0042" */
   order_number: string;
@@ -233,7 +246,7 @@ export type OrderUpdate = Partial<OrderInsert>;
  * Bahan baku yang dipakai pada satu pesanan (many-to-many).
  * Memungkinkan perhitungan HPP (Harga Pokok Produksi) per order.
  */
-export interface OrderMaterial {
+export type OrderMaterial = {
   id: string;
   order_id: string;
   material_id: string;
@@ -261,7 +274,7 @@ export type OrderMaterialUpdate = Partial<OrderMaterialInsert>;
  * Untuk laporan laba-rugi sederhana:
  *   Laba = SUM(amount WHERE type = 'income') - SUM(amount WHERE type = 'expense')
  */
-export interface JournalEntry {
+export type JournalEntry = {
   id: string;
   /** Tanggal entri (YYYY-MM-DD) */
   date: string;
@@ -294,7 +307,7 @@ export type JournalEntryUpdate = Partial<JournalEntryInsert>;
  * Berbeda dari journal_entries — transactions spesifik ke order
  * dan merekam DP, cicilan, pelunasan, serta refund.
  */
-export interface Transaction {
+export type Transaction = {
   id: string;
   /** Referensi ke orders.id */
   order_id: string;
@@ -329,13 +342,13 @@ export type TransactionUpdate = Partial<TransactionInsert>;
 /* ─── Relasi / Join types (untuk query dengan relasi) ─────────── */
 
 /** Order lengkap dengan relasi bahan baku dan transaksi */
-export interface OrderWithRelations extends Order {
+export type OrderWithRelations = Order & {
   order_materials?: (OrderMaterial & { material?: Material })[];
   transactions?: Transaction[];
 }
 
 /** Order ringkas untuk tampilan list/tabel */
-export interface OrderSummary {
+export type OrderSummary = {
   id: string;
   order_number: string;
   customer_name: string;

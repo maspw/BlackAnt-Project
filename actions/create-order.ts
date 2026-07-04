@@ -11,25 +11,25 @@ const WA_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? '6285731813118';
 /* ─── Schema — sama dengan inquiry tapi simpan ke DB ─────────── */
 const CreateOrderSchema = z.object({
   nama: z
-    .string({ required_error: 'Nama wajib diisi.' })
+    .string({ message: 'Nama wajib diisi.' })
     .min(2, 'Nama minimal 2 karakter.')
     .max(100),
 
   whatsapp: z
-    .string({ required_error: 'Nomor WhatsApp wajib diisi.' })
+    .string({ message: 'Nomor WhatsApp wajib diisi.' })
     .min(8, 'Nomor WhatsApp tidak valid.')
     .max(15)
     .regex(/^[0-9+\-\s()]+$/, 'Nomor hanya boleh berisi angka.'),
 
-  jenis: z.string({ required_error: 'Jenis pakaian wajib dipilih.' }).min(1),
+  jenis: z.string({ message: 'Jenis pakaian wajib dipilih.' }).min(1),
 
   jumlah: z.coerce
-    .number({ required_error: 'Jumlah wajib diisi.' })
+    .number({ message: 'Jumlah wajib diisi.' })
     .int()
     .positive('Jumlah harus lebih dari 0.'),
 
   detail: z
-    .string({ required_error: 'Detail pesanan wajib diisi.' })
+    .string({ message: 'Detail pesanan wajib diisi.' })
     .min(10, 'Detail minimal 10 karakter.')
     .max(1000),
 });
@@ -102,7 +102,6 @@ export async function createOrder(
     customer_name:  nama,
     customer_phone: clientWa,
     product_type:   jenis,
-    category:       jenis,
     quantity:       jumlah,
     notes:          detail,
     status:         'pending',

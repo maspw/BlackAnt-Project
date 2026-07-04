@@ -80,6 +80,7 @@ export async function restockMaterial(
       amount:      totalCost,
       account:     'Bahan Baku',
       order_id:    null,
+      transaction_id: null,
       notes:       notes ?? `Auto-insert dari fitur Restock panel admin`,
     });
 
