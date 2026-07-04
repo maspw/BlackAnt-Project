@@ -139,6 +139,8 @@ export interface Material {
   id: string;
   /** Nama bahan, misal "Kain Cotton Combed 30s" */
   name: string;
+  /** Kategori bahan, misal "Kain", "Benang", "Sablon", "Aksesori" */
+  category: string | null;
   /** Satuan, misal "meter", "roll", "lusin", "pcs" */
   unit: string;
   /** Stok saat ini */
