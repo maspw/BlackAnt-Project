@@ -16,8 +16,8 @@ import {
 const navItems = [
   { label: 'Dashboard',  href: '/admin/dashboard', icon: LayoutDashboard },
   { label: 'Pesanan',    href: '/admin/pesanan',   icon: ShoppingBag },
-  { label: 'Pelanggan',  href: '/admin/pelanggan', icon: Users },
   { label: 'Bahan',      href: '/admin/bahan',     icon: Package },
+  { label: 'Pelanggan',  href: '/admin/pelanggan', icon: Users },
   { label: 'Keuangan',   href: '/admin/keuangan',  icon: Wallet },
 ] as const;
 
