@@ -9,12 +9,14 @@ import {
   Wallet,
   Settings,
   ChevronRight,
+  Users,
 } from 'lucide-react';
 
 /* ─── Nav items ─────────────────────────────────────────────── */
 const navItems = [
   { label: 'Dashboard',  href: '/admin/dashboard', icon: LayoutDashboard },
   { label: 'Pesanan',    href: '/admin/pesanan',   icon: ShoppingBag },
+  { label: 'Pelanggan',  href: '/admin/pelanggan', icon: Users },
   { label: 'Bahan',      href: '/admin/bahan',     icon: Package },
   { label: 'Keuangan',   href: '/admin/keuangan',  icon: Wallet },
 ] as const;
