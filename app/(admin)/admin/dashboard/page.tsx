@@ -17,6 +17,9 @@ import {
 
 export const metadata: Metadata = { title: 'Dashboard' };
 
+const FONT_UI   = 'Inter, system-ui, sans-serif';
+const FONT_MONO = "'JetBrains Mono', 'Fira Code', ui-monospace, monospace";
+
 /* ══════════════════════════════════════════════════════════════
    Data fetching — semua parallel
 ══════════════════════════════════════════════════════════════ */
@@ -219,13 +222,14 @@ export default async function DashboardPage() {
         <div>
           <p
             className="text-[12px] uppercase tracking-widest mb-1.5"
-            style={{ color: '#acadae', fontFamily: FONT_UI }}
+            style={{ color: '#acadae' }}
+            className="font-sans"
           >
             Overview
           </p>
           <h2
             className="text-[24px] font-medium text-white leading-none"
-            style={{ fontFamily: FONT_UI }}
+            style={{ fontFamily: FONT_MONO }}
           >
             Dashboard
           </h2>
