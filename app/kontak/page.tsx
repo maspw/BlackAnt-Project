@@ -27,7 +27,7 @@ import SubmitButton from './submit-button';
 import { submitInquiry, type InquiryActionState } from '@/actions/inquiry';
 
 /* ─── Constants ─────────────────────────────────────────────── */
-const WA_NUMBER = '6285731813118';
+const WA_NUMBER = '6283821431377';
 
 const contactInfo = [
   {

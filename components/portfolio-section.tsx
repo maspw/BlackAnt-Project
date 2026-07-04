@@ -195,7 +195,7 @@ export default function PortfolioSection() {
         {/* Bottom CTA */}
         <div className="mt-14 md:mt-20 flex justify-center">
           <a
-            href="#kontak"
+            href="/kontak"
             className="inline-flex items-center gap-3 text-[15px] font-normal text-[#000000] border-b border-[#000000] pb-[2px] hover:text-[#878787] hover:border-[#878787] transition-colors duration-200"
             style={{ fontFamily: 'Inter, system-ui, sans-serif' }}
           >
