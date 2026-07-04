@@ -344,3 +344,46 @@ export function truncateWa(wa: string | null): string {
   if (normalized.length <= 8) return normalized;
   return `${normalized.slice(0, 4)}...${normalized.slice(-4)}`;
 }
+
+/**
+ * getCategoryBadgeColor()
+ * Mengembalikan set Tailwind classes dan hex color untuk badge kategori customer.
+ */
+export function getCategoryBadgeColor(category: string): StatusColorSet {
+  const map: Record<string, StatusColorSet> = {
+    vip: {
+      bg:     'bg-yellow-500/10',
+      text:   'text-yellow-400',
+      border: 'border-yellow-500/30',
+      dot:    'bg-yellow-400',
+      hex:    '#facc15',
+      label:  'VIP',
+    },
+    wholesale: {
+      bg:     'bg-[#83c3ff]/10',
+      text:   'text-[#83c3ff]',
+      border: 'border-[#83c3ff]/30',
+      dot:    'bg-[#83c3ff]',
+      hex:    '#83c3ff',
+      label:  'Wholesale',
+    },
+    regular: {
+      bg:     'bg-[#acadae]/10',
+      text:   'text-[#acadae]',
+      border: 'border-[#acadae]/30',
+      dot:    'bg-[#acadae]',
+      hex:    '#acadae',
+      label:  'Regular',
+    },
+    retail: {
+      bg:     'bg-emerald-500/10',
+      text:   'text-emerald-400',
+      border: 'border-emerald-500/30',
+      dot:    'bg-emerald-400',
+      hex:    '#34d399',
+      label:  'Retail',
+    },
+  };
+
+  return map[category] ?? map['regular'];
+}

@@ -130,6 +130,29 @@ export type OrderStatus =
  */
 export type TransactionType = 'income' | 'expense';
 
+export type CustomerCategory = 'vip' | 'wholesale' | 'regular' | 'retail';
+
+/* ─── Tabel: customers ───────────────────────────────────────── */
+export interface Customer {
+  id: string;
+  name: string;
+  phone: string;
+  email: string | null;
+  address: string | null;
+  category: CustomerCategory;
+  notes: string | null;
+  created_at: string;
+  updated_at: string | null;
+}
+
+export type CustomerInsert = Omit<Customer, 'id' | 'created_at' | 'updated_at'> & {
+  id?: string;
+  created_at?: string;
+  updated_at?: string | null;
+};
+
+export type CustomerUpdate = Partial<CustomerInsert>;
+
 /* ─── Tabel: materials ───────────────────────────────────────── */
 /**
  * Stok bahan baku (kain, benang, sablon, dll.)
