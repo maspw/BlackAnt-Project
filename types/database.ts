@@ -202,26 +202,20 @@ export interface Order {
   customer_phone: string | null;
   /** Nama produk / item yang dipesan */
   product_type: string;
-  /** Kategori produk, misal "Kaos", "Polo", "Hoodie" */
-  category: string | null;
-  /** Total kuantitas (pcs) */
-  quantity: number;
-  /** Harga jual per pcs (IDR) */
-  price_per_unit: number | null;
-  /** Total harga jual = quantity × price_per_unit */
+  /** Total harga (Rupiah) */
   total_price: number | null;
-  /** Total yang sudah dibayar (DP + cicilan) */
-  total_paid: number;
+  /** Kuantitas */
+  quantity: number;
+  /** Jumlah yang sudah dibayar (IDR) */
+  dp_amount: number;
   /** Status pesanan */
   status: OrderStatus;
   priority?: string | null;
   source?: string | null;
   /** Tanggal estimasi selesai produksi */
-  due_date: string | null;
+  deadline_date: string | null;
   /** Detail / catatan tambahan dari klien */
   notes: string | null;
-  /** URL gambar desain / referensi */
-  design_url: string | null;
   created_at: string;
   updated_at: string | null;
 }
@@ -349,9 +343,9 @@ export interface OrderSummary {
   product_type: string;
   quantity: number;
   total_price: number | null;
-  total_paid: number;
+  dp_amount: number;
   status: OrderStatus;
-  due_date: string | null;
+  deadline_date: string | null;
   created_at: string;
 }
 

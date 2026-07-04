@@ -108,11 +108,9 @@ export async function createOrder(
     status:         'pending',
     priority:       'normal',
     source:         'website',
-    total_paid:     0,
-    price_per_unit: null,
+    dp_amount:      0,
     total_price:    null,
-    due_date:       null,
-    design_url:     null,
+    deadline_date:  null,
   });
 
   if (error) {

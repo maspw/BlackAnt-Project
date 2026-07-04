@@ -48,7 +48,7 @@ async function fetchDashboardData() {
     // 5 pesanan terbaru
     supabase
       .from('orders')
-      .select('id, order_number, client_name, item_name, quantity, total_price, total_paid, status, due_date, created_at')
+      .select('id, order_number, customer_name, product_type, quantity, total_price, dp_amount, status, deadline_date, created_at')
       .order('created_at', { ascending: false })
       .limit(5),
 
@@ -56,8 +56,7 @@ async function fetchDashboardData() {
     supabase
       .from('materials')
       .select('id, name, unit, stock, min_stock, unit_cost')
-      .not('min_stock', 'is', null)
-      .filter('stock', 'lt', supabase.rpc as unknown as string),   // workaround — lihat note bawah
+      .not('min_stock', 'is', null),
 
     // Income bulan ini dari transactions
     supabase
@@ -74,10 +73,7 @@ async function fetchDashboardData() {
   );
 
   // Low stock: filter di JS karena Supabase tidak support kolom-vs-kolom comparison
-  const lowStock = ((await supabase
-    .from('materials')
-    .select('id, name, unit, stock, min_stock, unit_cost')
-    .not('min_stock', 'is', null)).data ?? [])
+  const lowStock = (lowStockMaterials ?? [])
     .filter((m) => m.stock < (m.min_stock ?? 0));
 
   return {
@@ -103,7 +99,7 @@ function StatusBadge({ status }: { status: OrderStatus }) {
         backgroundColor: c.hex + '18',
         color: c.hex,
         borderColor: c.hex + '40',
-        fontFamily: 'Inter, system-ui, sans-serif',
+        fontFamily: FONT_UI,
       }}
     >
       <span
@@ -139,7 +135,7 @@ function SummaryCard({ label, value, sub, icon: Icon, accentHex, alert }: Summar
       <div className="flex items-start justify-between gap-3">
         <span
           className="text-[12px] font-medium uppercase tracking-[0.06em] leading-none"
-          style={{ color: '#acadae', fontFamily: 'Inter, system-ui, sans-serif' }}
+          style={{ color: '#acadae', fontFamily: FONT_UI }}
         >
           {label}
         </span>
@@ -156,7 +152,7 @@ function SummaryCard({ label, value, sub, icon: Icon, accentHex, alert }: Summar
         className="text-[32px] font-medium leading-none"
         style={{
           color: alert ? '#f87171' : '#ffffff',
-          fontFamily: "'JetBrains Mono', 'Fira Code', ui-monospace, monospace",
+          fontFamily: FONT_MONO,
         }}
       >
         {value}
@@ -166,7 +162,7 @@ function SummaryCard({ label, value, sub, icon: Icon, accentHex, alert }: Summar
       {sub && (
         <p
           className="text-[12px] leading-none"
-          style={{ color: '#acadae', fontFamily: 'Inter, system-ui, sans-serif' }}
+          style={{ color: '#acadae', fontFamily: FONT_UI }}
         >
           {sub}
         </p>
@@ -223,13 +219,13 @@ export default async function DashboardPage() {
         <div>
           <p
             className="text-[12px] uppercase tracking-widest mb-1.5"
-            style={{ color: '#acadae', fontFamily: 'Inter, system-ui, sans-serif' }}
+            style={{ color: '#acadae', fontFamily: FONT_UI }}
           >
             Overview
           </p>
           <h2
             className="text-[24px] font-medium text-white leading-none"
-            style={{ fontFamily: 'Inter, system-ui, sans-serif' }}
+            style={{ fontFamily: FONT_UI }}
           >
             Dashboard
           </h2>
@@ -238,7 +234,7 @@ export default async function DashboardPage() {
           className="text-[12px]"
           style={{
             color: '#acadae',
-            fontFamily: "'JetBrains Mono', monospace",
+            fontFamily: FONT_MONO,
           }}
         >
           {formatTanggalIndo(new Date().toISOString(), { withTime: true })}
@@ -270,14 +266,14 @@ export default async function DashboardPage() {
           >
             <span
               className="text-[12px] font-medium uppercase tracking-[0.06em]"
-              style={{ color: '#acadae', fontFamily: 'Inter, system-ui, sans-serif' }}
+              style={{ color: '#acadae', fontFamily: FONT_UI }}
             >
               Pesanan Terbaru
             </span>
             <a
               href="/admin/pesanan"
               className="text-[12px] transition-colors"
-              style={{ color: '#83c3ff', fontFamily: 'Inter, system-ui, sans-serif' }}
+              style={{ color: '#83c3ff', fontFamily: FONT_UI }}
             >
               Lihat semua →
             </a>
@@ -288,7 +284,7 @@ export default async function DashboardPage() {
             <div className="flex items-center justify-center h-32">
               <p
                 className="text-[14px]"
-                style={{ color: '#acadae', fontFamily: 'Inter, system-ui, sans-serif' }}
+                style={{ color: '#acadae', fontFamily: FONT_UI }}
               >
                 Belum ada pesanan.
               </p>
@@ -305,7 +301,7 @@ export default async function DashboardPage() {
                         className="px-4 py-2.5 text-[11px] font-medium uppercase tracking-[0.06em] whitespace-nowrap"
                         style={{
                           color: '#acadae',
-                          fontFamily: 'Inter, system-ui, sans-serif',
+                          fontFamily: FONT_UI,
                           borderBottom: '1px solid #34353c',
                         }}
                       >
@@ -330,7 +326,7 @@ export default async function DashboardPage() {
                           className="text-[12px]"
                           style={{
                             color: '#83c3ff',
-                            fontFamily: "'JetBrains Mono', monospace",
+                            fontFamily: FONT_MONO,
                           }}
                         >
                           {order.order_number ?? '—'}
@@ -341,10 +337,10 @@ export default async function DashboardPage() {
                       <td className="px-4 py-3 max-w-[140px]">
                         <span
                           className="text-[13px] font-medium text-white block truncate"
-                          style={{ fontFamily: 'Inter, system-ui, sans-serif' }}
-                          title={order.client_name}
+                          style={{ fontFamily: FONT_UI }}
+                          title={order.customer_name}
                         >
-                          {order.client_name}
+                          {order.customer_name}
                         </span>
                       </td>
 
@@ -352,10 +348,10 @@ export default async function DashboardPage() {
                       <td className="px-4 py-3 max-w-[160px]">
                         <span
                           className="text-[13px] block truncate"
-                          style={{ color: '#acadae', fontFamily: 'Inter, system-ui, sans-serif' }}
-                          title={`${order.item_name} — ${order.quantity} pcs`}
+                          style={{ color: '#acadae', fontFamily: FONT_UI }}
+                          title={`${order.product_type} — ${order.quantity} pcs`}
                         >
-                          {order.item_name}
+                          {order.product_type}
                           <span className="ml-1 text-[11px]" style={{ color: '#34353c' }}>
                             ×{order.quantity}
                           </span>
@@ -366,7 +362,7 @@ export default async function DashboardPage() {
                       <td className="px-4 py-3 whitespace-nowrap">
                         <span
                           className="text-[13px] text-white"
-                          style={{ fontFamily: "'JetBrains Mono', monospace" }}
+                          style={{ fontFamily: FONT_MONO }}
                         >
                           {formatRupiah(order.total_price, { compact: true })}
                         </span>
@@ -379,15 +375,9 @@ export default async function DashboardPage() {
 
                       {/* Due date */}
                       <td className="px-4 py-3 whitespace-nowrap">
-                        <span
-                          className="text-[12px]"
-                          style={{
-                            color: '#acadae',
-                            fontFamily: "'JetBrains Mono', monospace",
-                          }}
-                        >
-                          {order.due_date
-                            ? formatRelativeTime(order.due_date)
+                        <span className="text-[12px]" style={{ color: '#acadae', fontFamily: FONT_MONO }}>
+                          {order.deadline_date
+                            ? formatRelativeTime(order.deadline_date)
                             : '—'}
                         </span>
                       </td>

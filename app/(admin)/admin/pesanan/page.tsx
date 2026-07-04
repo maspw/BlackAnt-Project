@@ -29,7 +29,7 @@ async function getOrders(filter: string): Promise<OrderSummary[]> {
   let query = supabase
     .from('orders')
     .select(
-      'id, order_number, customer_name, customer_phone, product_type, quantity, total_price, total_paid, status, due_date, created_at',
+      'id, order_number, customer_name, customer_phone, product_type, quantity, total_price, dp_amount, status, deadline_date, created_at',
     )
     .order('created_at', { ascending: false });
 

@@ -88,8 +88,8 @@ function OrderModal({ order, onClose }: OrderModalProps) {
   if (!order) return null;
 
   const isFinish = selectedStatus === 'finish';
-  const sisa     = calcSisa(order.total_price, order.total_paid);
-  const progress = calcPaymentProgress(order.total_price, order.total_paid);
+  const sisa     = calcSisa(order.total_price, order.dp_amount);
+  const progress = calcPaymentProgress(order.total_price, order.dp_amount);
 
   return (
     /* Backdrop */
@@ -163,7 +163,7 @@ function OrderModal({ order, onClose }: OrderModalProps) {
               { icon: User,     label: 'Klien',    value: order.customer_name },
               { icon: Package,  label: 'Item',     value: `${order.product_type}` },
               { icon: Package,  label: 'Kuantitas',value: `${order.quantity} pcs` },
-              { icon: Calendar, label: 'Deadline', value: order.due_date ? formatTanggalIndo(order.due_date, { short: true }) : '—' },
+              { icon: Calendar, label: 'Deadline', value: order.deadline_date ? formatTanggalIndo(order.deadline_date, { short: true }) : '—' },
             ].map(({ icon: Icon, label, value }) => (
               <div key={label}>
                 <p className="text-[11px] uppercase tracking-widest mb-1 flex items-center gap-1"
@@ -192,7 +192,7 @@ function OrderModal({ order, onClose }: OrderModalProps) {
             <div className="flex flex-col gap-2">
               {[
                 { label: 'Total Harga',  value: formatRupiah(order.total_price) },
-                { label: 'Sudah Bayar',  value: formatRupiah(order.total_paid) },
+                { label: 'Sudah Bayar',  value: formatRupiah(order.dp_amount) },
                 { label: 'Sisa Tagihan', value: formatRupiah(sisa), highlight: sisa > 0 },
               ].map(({ label, value, highlight }) => (
                 <div key={label} className="flex items-center justify-between">
@@ -519,7 +519,7 @@ export default function PesananClient({ orders, activeFilter }: PesananClientPro
                     {/* Deadline */}
                     <td className="px-4 py-3 whitespace-nowrap">
                       <span className="text-[12px]" style={{ color: '#acadae', fontFamily: FONT_MONO }}>
-                        {order.due_date ? formatRelativeTime(order.due_date) : '—'}
+                        {order.deadline_date ? formatRelativeTime(order.deadline_date) : '—'}
                       </span>
                     </td>
 
