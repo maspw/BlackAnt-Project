@@ -75,9 +75,71 @@ async function fetchDashboardData() {
     0,
   );
 
-  // Low stock: filter di JS karena Supabase tidak support kolom-vs-kolom comparison
+  // Low stock: filter di JS
   const lowStock = (lowStockMaterials ?? [])
     .filter((m) => m.stock < (m.min_stock ?? 0));
+
+  // --- Analytics Data --- //
+  
+  // 1. Sales 6 Months
+  const sixMonthsAgo = new Date();
+  sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 5);
+  sixMonthsAgo.setDate(1);
+  sixMonthsAgo.setHours(0, 0, 0, 0);
+
+  const { data: recentTransactions } = await supabase
+    .from('transactions')
+    .select('amount, created_at')
+    .eq('type', 'income')
+    .gte('created_at', sixMonthsAgo.toISOString());
+
+  const salesByMonth: Record<string, number> = {};
+  for (let i = 5; i >= 0; i--) {
+    const d = new Date();
+    d.setMonth(d.getMonth() - i);
+    const mStr = d.toLocaleDateString('id-ID', { month: 'short' });
+    salesByMonth[mStr] = 0;
+  }
+  
+  (recentTransactions || []).forEach(tx => {
+    const d = new Date(tx.created_at);
+    const mStr = d.toLocaleDateString('id-ID', { month: 'short' });
+    if (salesByMonth[mStr] !== undefined) {
+      salesByMonth[mStr] += tx.amount || 0;
+    }
+  });
+
+  const salesData = Object.entries(salesByMonth).map(([month, total]) => ({ month, total }));
+
+  // 2. Top Customers & Categories
+  const { data: allOrders } = await supabase
+    .from('orders')
+    .select('customer_name, product_type, total_price')
+    .in('status', ['process', 'qc', 'shipping', 'finish']);
+
+  const customerSpend: Record<string, number> = {};
+  const categoryCount: Record<string, number> = {};
+
+  (allOrders || []).forEach(o => {
+    // Customer spend
+    if (o.customer_name) {
+      customerSpend[o.customer_name] = (customerSpend[o.customer_name] || 0) + (o.total_price || 0);
+    }
+    // Category count
+    if (o.product_type) {
+      categoryCount[o.product_type] = (categoryCount[o.product_type] || 0) + 1;
+    }
+  });
+
+  const topCustomers = Object.entries(customerSpend)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 3)
+    .map(([name, total]) => ({ name, total }));
+
+  const topCategories = Object.entries(categoryCount)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 4)
+    .map(([name, count]) => ({ name, count }));
 
   return {
     totalActive: totalActive ?? 0,
@@ -85,6 +147,9 @@ async function fetchDashboardData() {
     recentOrders: recentOrders ?? [],
     lowStock,
     pendapatanBulanIni,
+    salesData,
+    topCustomers,
+    topCategories,
   };
 }
 
@@ -178,7 +243,7 @@ function SummaryCard({ label, value, sub, icon: Icon, accentHex, alert }: Summar
    Page
 ══════════════════════════════════════════════════════════════ */
 export default async function DashboardPage() {
-  const { totalActive, needAction, recentOrders, lowStock, pendapatanBulanIni } =
+  const { totalActive, needAction, recentOrders, lowStock, pendapatanBulanIni, salesData, topCustomers, topCategories } =
     await fetchDashboardData();
 
   const summaryCards: SummaryCardProps[] = [
@@ -517,6 +582,109 @@ export default async function DashboardPage() {
               })}
             </ul>
           )}
+        </div>
+      </div>
+
+      {/* ── ANALYTICS SECTION ──────────────────────────── */}
+      <div className="flex flex-col gap-5 pt-4">
+        <h3 className="text-[20px] font-medium text-white" style={{ fontFamily: FONT_UI }}>Analytics</h3>
+        
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
+          
+          {/* Grafik Penjualan (Bar Chart 6 Bulan) */}
+          <div 
+            className="lg:col-span-2 p-5 rounded-[8px] flex flex-col gap-6"
+            style={{ backgroundColor: '#1b1d1f', boxShadow: 'rgba(255, 255, 255, 0.08) 0px 0px 0px 1px inset' }}
+          >
+            <h4 className="text-[12px] uppercase text-[#acadae] font-medium tracking-[0.06em]">Pemasukan 6 Bulan Terakhir</h4>
+            <div className="flex-1 flex items-end gap-4 h-[200px] p-4 rounded-[6px]" style={{ backgroundColor: '#141415' }}>
+              {salesData.map((data, i) => {
+                const maxVal = Math.max(...salesData.map(d => d.total), 1);
+                const heightPct = (data.total / maxVal) * 100;
+                return (
+                  <div key={i} className="flex-1 flex flex-col justify-end items-center gap-2 h-full group">
+                    {/* Tooltip on hover */}
+                    <span className="text-[10px] font-mono opacity-0 group-hover:opacity-100 transition-opacity text-[#acadae] -mb-1">
+                      {formatRupiah(data.total, { compact: true })}
+                    </span>
+                    <div 
+                      className="w-full rounded-t-[4px] transition-all duration-500 ease-out hover:opacity-80"
+                      style={{ 
+                        height: `${Math.max(heightPct, 1)}%`, 
+                        backgroundColor: '#83c3ff',
+                        minHeight: data.total > 0 ? '4px' : '1px'
+                      }}
+                    />
+                    <span className="text-[11px] text-[#acadae] uppercase tracking-wider">{data.month}</span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-5">
+            {/* Top Categories */}
+            <div 
+              className="p-5 rounded-[8px] flex flex-col gap-4 flex-1"
+              style={{ backgroundColor: '#1b1d1f', boxShadow: 'rgba(255, 255, 255, 0.08) 0px 0px 0px 1px inset' }}
+            >
+              <h4 className="text-[12px] uppercase text-[#acadae] font-medium tracking-[0.06em]">Kategori Terlaris</h4>
+              <div className="flex flex-col gap-3">
+                {topCategories.length === 0 ? (
+                  <span className="text-[12px] text-[#acadae] italic">Belum ada data...</span>
+                ) : topCategories.map((cat, i) => {
+                  const maxCount = Math.max(...topCategories.map(c => c.count), 1);
+                  const widthPct = (cat.count / maxCount) * 100;
+                  return (
+                    <div key={i} className="flex flex-col gap-1.5">
+                      <div className="flex justify-between items-center text-[12px]">
+                        <span className="text-white font-medium">{cat.name}</span>
+                        <span className="text-[#acadae] font-mono">{cat.count} order</span>
+                      </div>
+                      <div className="h-1.5 w-full bg-[#141415] rounded-full overflow-hidden">
+                        <div 
+                          className="h-full rounded-full transition-all duration-500"
+                          style={{ width: `${widthPct}%`, backgroundColor: i === 0 ? '#34d399' : '#83c3ff' }}
+                        />
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Top Customers */}
+            <div 
+              className="p-5 rounded-[8px] flex flex-col gap-4 flex-1"
+              style={{ backgroundColor: '#1b1d1f', boxShadow: 'rgba(255, 255, 255, 0.08) 0px 0px 0px 1px inset' }}
+            >
+              <h4 className="text-[12px] uppercase text-[#acadae] font-medium tracking-[0.06em]">Top Customers</h4>
+              <div className="flex flex-col gap-3">
+                {topCustomers.length === 0 ? (
+                  <span className="text-[12px] text-[#acadae] italic">Belum ada data...</span>
+                ) : topCustomers.map((cust, i) => {
+                  const initials = cust.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+                  return (
+                    <div key={i} className="flex items-center gap-3">
+                      <div 
+                        className="w-8 h-8 rounded-full flex items-center justify-center text-[11px] font-bold"
+                        style={{ backgroundColor: 'rgba(131,195,255,0.15)', color: '#83c3ff' }}
+                      >
+                        {initials}
+                      </div>
+                      <div className="flex flex-col min-w-0 flex-1">
+                        <span className="text-[13px] text-white font-medium truncate">{cust.name}</span>
+                        <span className="text-[12px] text-[#34d399]" style={{ fontFamily: FONT_MONO }}>
+                          {formatRupiah(cust.total)}
+                        </span>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+
         </div>
       </div>
     </div>
