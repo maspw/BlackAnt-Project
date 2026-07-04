@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useActionState, useMemo } from 'react';
-import { PlusCircle, Search, CheckCircle2, AlertCircle, Edit2, Trash2, X } from 'lucide-react';
+import { PlusCircle, Search, CheckCircle2, AlertCircle, Edit2, Trash2, X, Users } from 'lucide-react';
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription,
 } from '@/components/ui/dialog';
@@ -62,7 +62,7 @@ function DarkInput({ id, name, label, type = 'text', required, placeholder, defa
       <input
         id={id} name={name} type={type} required={required}
         placeholder={placeholder} defaultValue={defaultValue}
-        className="w-full h-9 px-3 text-[13px] outline-none"
+        className="w-full h-9 px-3 text-[13px] outline-none placeholder:text-[#acadae]"
         style={{
           backgroundColor: '#0d0d0e', color: '#ffffff',
           border: '1px solid #34353c', borderRadius: '4px',
@@ -163,7 +163,7 @@ function CustomerModal({
               <textarea
                 id="notes" name="notes" rows={3} placeholder="Catatan internal..."
                 defaultValue={customer?.notes ?? ''}
-                className="w-full p-3 text-[13px] outline-none resize-none"
+                className="w-full p-3 text-[13px] outline-none resize-none placeholder:text-[#acadae]"
                 style={{
                   backgroundColor: '#0d0d0e', color: '#ffffff',
                   border: '1px solid #34353c', borderRadius: '4px', fontFamily: FONT_UI,
@@ -229,13 +229,13 @@ export default function PelangganClient({ data }: { data: CustomerWithStats[] })
               placeholder="Cari nama atau telepon..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full h-9 pl-9 pr-3 text-[13px] outline-none transition-colors"
+              className="w-full h-9 pl-9 pr-3 text-[13px] outline-none transition-colors placeholder:text-[#acadae]"
               style={{
                 backgroundColor: '#1b1d1f', color: '#ffffff',
-                border: '1px solid rgba(255,255,255,0.08)', borderRadius: '4px', fontFamily: FONT_UI,
+                border: '1px solid #34353c', borderRadius: '4px', fontFamily: FONT_UI,
               }}
-              onFocus={(e) => { e.currentTarget.style.borderColor = '#34353c'; }}
-              onBlur={(e)  => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)'; }}
+              onFocus={(e) => { e.currentTarget.style.borderColor = '#83c3ff'; }}
+              onBlur={(e)  => { e.currentTarget.style.borderColor = '#34353c'; }}
             />
           </div>
 
@@ -246,10 +246,12 @@ export default function PelangganClient({ data }: { data: CustomerWithStats[] })
             className="h-9 px-3 text-[13px] outline-none transition-colors"
             style={{
               backgroundColor: '#1b1d1f', color: '#ffffff',
-              border: '1px solid rgba(255,255,255,0.08)', borderRadius: '4px', fontFamily: FONT_UI,
+              border: '1px solid #34353c', borderRadius: '4px', fontFamily: FONT_UI,
             }}
+            onFocus={(e) => { e.currentTarget.style.borderColor = '#83c3ff'; }}
+            onBlur={(e)  => { e.currentTarget.style.borderColor = '#34353c'; }}
           >
-            <option value="all" style={{ backgroundColor: '#1b1d1f' }}>Semua Kategori</option>
+            <option value="all" style={{ backgroundColor: '#1b1d1f', color: '#ffffff' }}>Semua Kategori</option>
             {CATEGORY_OPTIONS.map(o => (
               <option key={o.value} value={o.value} style={{ backgroundColor: '#1b1d1f' }}>{o.label}</option>
             ))}
@@ -276,6 +278,7 @@ export default function PelangganClient({ data }: { data: CustomerWithStats[] })
           className="flex flex-col items-center justify-center gap-2 h-48 rounded-[8px]"
           style={{ backgroundColor: '#1b1d1f', boxShadow: 'rgba(255,255,255,0.08) 0 0 0 1px inset' }}
         >
+          <Users size={24} style={{ color: '#acadae' }} className="opacity-50 mb-1" />
           <p className="text-[14px]" style={{ color: '#acadae', fontFamily: FONT_UI }}>
             {data.length === 0 ? 'Belum ada data pelanggan.' : 'Pencarian tidak ditemukan.'}
           </p>
@@ -292,7 +295,7 @@ export default function PelangganClient({ data }: { data: CustomerWithStats[] })
                   {['Nama Pelanggan', 'Telepon', 'Kategori', 'Total Order', 'Total Belanja', 'Order Terakhir', 'Aksi'].map((h) => (
                     <th
                       key={h}
-                      className="px-3 py-3 text-[11px] font-medium uppercase tracking-[0.06em] whitespace-nowrap"
+                      className="px-3 py-3 text-[12px] font-medium uppercase tracking-[0.06em] whitespace-nowrap"
                       style={{ color: '#acadae', fontFamily: FONT_UI, borderBottom: '1px solid #34353c' }}
                     >
                       {h}
@@ -312,7 +315,7 @@ export default function PelangganClient({ data }: { data: CustomerWithStats[] })
                     >
                       {/* Nama & Perusahaan */}
                       <td className="px-3 py-3 max-w-[200px]">
-                        <span className="text-[13px] font-medium text-white block truncate" style={{ fontFamily: FONT_UI }}>
+                        <span className="text-[13px] font-bold text-white block truncate" style={{ fontFamily: FONT_UI }}>
                           {cust.name}
                         </span>
                         {cust.address && (
@@ -324,7 +327,7 @@ export default function PelangganClient({ data }: { data: CustomerWithStats[] })
 
                       {/* Telepon */}
                       <td className="px-3 py-3 whitespace-nowrap">
-                        <span className="text-[12px]" style={{ color: '#83c3ff', fontFamily: FONT_MONO }}>
+                        <span className="text-[12px]" style={{ color: '#ffffff', fontFamily: FONT_MONO }}>
                           {cust.phone}
                         </span>
                       </td>
