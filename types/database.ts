@@ -100,6 +100,12 @@ export interface Database {
         Update: CustomerUpdate;
         Relationships: never[];
       };
+      suppliers: {
+        Row: Supplier;
+        Insert: SupplierInsert;
+        Update: SupplierUpdate;
+        Relationships: never[];
+      };
     };
     Views: Record<string, never>;
     Functions: Record<string, never>;
@@ -165,6 +171,29 @@ export type CustomerInsert = Omit<Customer, 'id' | 'created_at' | 'updated_at'> 
 };
 
 export type CustomerUpdate = Partial<CustomerInsert>;
+
+/* ─── Tabel: suppliers ───────────────────────────────────────── */
+export type Supplier = {
+  id: string;
+  name: string;
+  contact_person: string | null;
+  phone: string | null;
+  email: string | null;
+  address: string | null;
+  category: string | null;
+  rating: number;
+  notes: string | null;
+  created_at: string;
+  updated_at: string | null;
+};
+
+export type SupplierInsert = Omit<Supplier, 'id' | 'created_at' | 'updated_at'> & {
+  id?: string;
+  created_at?: string;
+  updated_at?: string | null;
+};
+
+export type SupplierUpdate = Partial<SupplierInsert>;
 
 /* ─── Tabel: materials ───────────────────────────────────────── */
 /**

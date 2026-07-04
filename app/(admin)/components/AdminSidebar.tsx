@@ -10,6 +10,7 @@ import {
   Settings,
   ChevronRight,
   Users,
+  Truck,
 } from 'lucide-react';
 
 /* ─── Nav items ─────────────────────────────────────────────── */
@@ -17,6 +18,7 @@ const navItems = [
   { label: 'Dashboard',  href: '/admin/dashboard', icon: LayoutDashboard },
   { label: 'Pesanan',    href: '/admin/pesanan',   icon: ShoppingBag },
   { label: 'Bahan',      href: '/admin/bahan',     icon: Package },
+  { label: 'Pemasok',    href: '/admin/supplier',  icon: Truck },
   { label: 'Pelanggan',  href: '/admin/pelanggan', icon: Users },
   { label: 'Keuangan',   href: '/admin/keuangan',  icon: Wallet },
 ] as const;
