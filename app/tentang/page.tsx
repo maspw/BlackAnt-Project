@@ -66,12 +66,7 @@ const visiMisi = [
   },
 ];
 
-const team = [
-  { name: 'Andi Pratama', role: 'Founder & Creative Director' },
-  { name: 'Siti Rahayu', role: 'Head of Production' },
-  { name: 'Rizki Firmansyah', role: 'Quality Control Lead' },
-  { name: 'Maya Dewi', role: 'Client Relations Manager' },
-];
+
 
 /* ─────────────────────────────────────────────────────────────
    Page Component (RSC)
@@ -271,63 +266,6 @@ export default function TentangPage() {
           </div>
         </section>
 
-        {/* ── Tim Kami ─────────────────────────────────────── */}
-        <section className="border-t border-[#e5e5e5]">
-          <div className="mx-auto max-w-[1200px] px-6 md:px-8 py-16 md:py-24">
-
-            <div className="mb-10 md:mb-14">
-              <span
-                className="block text-[15px] font-normal text-[#878787] tracking-widest uppercase mb-3"
-                style={{ fontFamily: 'Inter, system-ui, sans-serif' }}
-              >
-                Orang-orang di Baliknya
-              </span>
-              <h2
-                className="text-[clamp(24px,3.5vw,40px)] font-normal text-[#000000] leading-[1.10]"
-                style={{ fontFamily: "'Old Standard TT', 'EB Garamond', Georgia, serif" }}
-              >
-                Tim Kami
-              </h2>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-10">
-              {team.map((member) => (
-                <div key={member.name} className="flex flex-col gap-3">
-                  {/* Avatar placeholder — monochrome square */}
-                  <div className="relative w-full overflow-hidden bg-[#f5f5f5]" style={{ paddingBottom: '100%' }}>
-                    <Image
-                      src={`https://images.unsplash.com/photo-${
-                        member.name === 'Andi Pratama' ? '1507003211169-0a1dd7228f2d' :
-                        member.name === 'Siti Rahayu' ? '1494790108377-be9c29b29330' :
-                        member.name === 'Rizki Firmansyah' ? '1500648767791-00dcc994a43e' :
-                        '1438761681033-6461ffad8d80'
-                      }?w=400&q=80&fit=crop&crop=face`}
-                      alt={`Foto ${member.name}`}
-                      fill
-                      className="object-cover grayscale"
-                      sizes="(max-width: 640px) 50vw, 25vw"
-                      unoptimized
-                    />
-                  </div>
-                  <div>
-                    <p
-                      className="text-[18px] font-bold text-[#000000] leading-snug"
-                      style={{ fontFamily: 'Inter, system-ui, sans-serif' }}
-                    >
-                      {member.name}
-                    </p>
-                    <p
-                      className="mt-1 text-[15px] font-normal text-[#878787] leading-[1.65]"
-                      style={{ fontFamily: 'Inter, system-ui, sans-serif' }}
-                    >
-                      {member.role}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
 
       </main>
       <Footer />
