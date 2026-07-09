@@ -33,6 +33,7 @@ const navItems = [
   { label: 'Pelanggan',  href: '/admin/pelanggan', icon: Users },
   { label: 'Keuangan',   href: '/admin/keuangan',  icon: Wallet },
   { label: 'Audit Trail', href: '/admin/audit',    icon: Activity },
+  { label: 'Pengaturan', href: '/admin/pengaturan',icon: Settings },
 ] as const;
 
 /* ─── Sidebar ───────────────────────────────────────────────── */
