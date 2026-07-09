@@ -112,6 +112,12 @@ export interface Database {
         Update: QcRecordUpdate;
         Relationships: never[];
       };
+      notifications: {
+        Row: Notification;
+        Insert: NotificationInsert;
+        Update: NotificationUpdate;
+        Relationships: never[];
+      };
     };
     Views: Record<string, never>;
     Functions: Record<string, never>;
@@ -296,6 +302,27 @@ export type QcRecordInsert = Omit<QcRecord, 'id' | 'created_at'> & {
 };
 
 export type QcRecordUpdate = Partial<QcRecordInsert>;
+
+/* ─── Tabel: notifications ───────────────────────────────────── */
+export type Notification = {
+  id: string;
+  user_id: string | null;
+  type: string;
+  title: string;
+  message: string | null;
+  link: string | null;
+  metadata: Record<string, any> | null;
+  is_read: boolean;
+  priority: 'normal' | 'urgent';
+  created_at: string;
+};
+
+export type NotificationInsert = Omit<Notification, 'id' | 'created_at'> & {
+  id?: string;
+  created_at?: string;
+};
+
+export type NotificationUpdate = Partial<NotificationInsert>;
 
 /* ─── Tabel: order_materials ─────────────────────────────────── */
 /**

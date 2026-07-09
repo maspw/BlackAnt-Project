@@ -1,7 +1,7 @@
 'use client';
 
 import { usePathname } from 'next/navigation';
-import { Bell } from 'lucide-react';
+import NotificationBell from '@/components/admin/NotificationBell';
 
 /* ─── Page title map ─────────────────────────────────────────── */
 const PAGE_TITLES: Record<string, string> = {
@@ -43,23 +43,7 @@ export default function AdminHeader() {
 
       {/* Kanan: actions */}
       <div className="flex items-center gap-2">
-        {/* Notifikasi */}
-        <button
-          type="button"
-          className="w-8 h-8 flex items-center justify-center rounded-[4px] transition-colors duration-100"
-          style={{ color: '#acadae' }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.backgroundColor = '#3c3d40';
-            e.currentTarget.style.color = '#ffffff';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.backgroundColor = 'transparent';
-            e.currentTarget.style.color = '#acadae';
-          }}
-          aria-label="Notifikasi"
-        >
-          <Bell size={15} strokeWidth={1.5} aria-hidden="true" />
-        </button>
+        <NotificationBell />
 
         {/* Divider */}
         <div
