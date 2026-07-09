@@ -15,11 +15,13 @@ import {
   Calendar,
   CheckSquare,
   Image as ImageIcon,
+  BarChart3,
 } from 'lucide-react';
 
 /* ─── Nav items ─────────────────────────────────────────────── */
 const navItems = [
   { label: 'Dashboard',  href: '/admin/dashboard', icon: LayoutDashboard },
+  { label: 'Laporan',    href: '/admin/laporan',   icon: BarChart3 },
   { label: 'Kalender',   href: '/admin/kalender',  icon: Calendar },
   { label: 'Penawaran',  href: '/admin/quotation', icon: FileText },
   { label: 'QC & Inspeksi', href: '/admin/qc',     icon: CheckSquare },
