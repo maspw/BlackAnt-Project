@@ -14,6 +14,7 @@ import {
   FileText,
   Calendar,
   CheckSquare,
+  Image as ImageIcon,
 } from 'lucide-react';
 
 /* ─── Nav items ─────────────────────────────────────────────── */
@@ -22,6 +23,7 @@ const navItems = [
   { label: 'Kalender',   href: '/admin/kalender',  icon: Calendar },
   { label: 'Penawaran',  href: '/admin/quotation', icon: FileText },
   { label: 'QC & Inspeksi', href: '/admin/qc',     icon: CheckSquare },
+  { label: 'Desain',     href: '/admin/desain',    icon: ImageIcon },
   { label: 'Pesanan',    href: '/admin/pesanan',   icon: ShoppingBag },
   { label: 'Bahan',      href: '/admin/bahan',     icon: Package },
   { label: 'Pemasok',    href: '/admin/supplier',  icon: Truck },

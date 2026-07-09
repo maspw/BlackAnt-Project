@@ -118,6 +118,15 @@ export interface Database {
         Update: NotificationUpdate;
         Relationships: never[];
       };
+      designs: {
+        Row: Design;
+        Insert: DesignInsert;
+        Update: DesignUpdate;
+        Relationships: [
+          { foreignKeyName: "designs_customer_id_fkey"; columns: ["customer_id"]; referencedRelation: "customers"; referencedColumns: ["id"]; },
+          { foreignKeyName: "designs_order_id_fkey"; columns: ["order_id"]; referencedRelation: "orders"; referencedColumns: ["id"]; }
+        ];
+      };
     };
     Views: Record<string, never>;
     Functions: Record<string, never>;
@@ -323,6 +332,30 @@ export type NotificationInsert = Omit<Notification, 'id' | 'created_at'> & {
 };
 
 export type NotificationUpdate = Partial<NotificationInsert>;
+
+/* ─── Tabel: designs ─────────────────────────────────────────── */
+export type Design = {
+  id: string;
+  order_id: string | null;
+  customer_id: string | null;
+  name: string;
+  file_url: string;
+  file_type: string | null; // Logo, Mockup, Pattern, dll.
+  file_size: number | null;
+  version: number;
+  notes: string | null;
+  created_at: string;
+  updated_at: string;
+};
+
+export type DesignInsert = Omit<Design, 'id' | 'created_at' | 'updated_at' | 'version'> & {
+  id?: string;
+  created_at?: string;
+  updated_at?: string;
+  version?: number;
+};
+
+export type DesignUpdate = Partial<DesignInsert>;
 
 /* ─── Tabel: order_materials ─────────────────────────────────── */
 /**
