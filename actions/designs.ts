@@ -8,7 +8,7 @@ const CreateDesignSchema = z.object({
   name: z.string().min(1, 'Nama desain wajib diisi.'),
   file_url: z.string().url('URL file tidak valid.'),
   file_type: z.enum(['Logo', 'Mockup', 'Pattern', 'Reference']),
-  customer_id: z.string().uuid('Customer wajib dipilih.'),
+  customer_id: z.string().uuid().optional().or(z.literal('')),
   order_id: z.string().uuid().optional().or(z.literal('')),
   notes: z.string().optional(),
 });
@@ -26,7 +26,7 @@ export async function createDesignRecord(
     name: formData.get('name'),
     file_url: formData.get('file_url'),
     file_type: formData.get('file_type'),
-    customer_id: formData.get('customer_id'),
+    customer_id: formData.get('customer_id') || undefined,
     order_id: formData.get('order_id') || undefined,
     notes: formData.get('notes') || undefined,
   });
@@ -43,7 +43,7 @@ export async function createDesignRecord(
     name: data.name,
     file_url: data.file_url,
     file_type: data.file_type,
-    customer_id: data.customer_id,
+    customer_id: data.customer_id || null,
     order_id: data.order_id || null,
     notes: data.notes || null,
     file_size: null,

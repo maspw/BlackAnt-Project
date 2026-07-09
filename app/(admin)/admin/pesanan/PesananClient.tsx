@@ -4,8 +4,10 @@ import { useState, useCallback, useEffect, useActionState, useRef } from 'react'
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import {
   X, ChevronRight, Loader2, CheckCircle2, AlertCircle,
-  User, Package, Calendar, CreditCard, Phone, FileText,
+  User, Package, Calendar, CreditCard, Phone, FileText, Image as ImageIcon, UploadCloud
 } from 'lucide-react';
+import { supabase } from '@/lib/supabaseClient';
+import { createDesignRecord } from '@/actions/designs';
 import type { OrderSummary, OrderStatus } from '@/types/database';
 import {
   formatRupiah, formatTanggalIndo, formatRelativeTime,
@@ -76,6 +78,54 @@ function OrderModal({ order, onClose }: OrderModalProps) {
   useEffect(() => {
     setSelectedStatus(order?.status ?? '');
   }, [order]);
+
+  const [designs, setDesigns] = useState<any[]>([]);
+  const [isUploading, setIsUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (order) {
+      const fetchDesigns = async () => {
+        const { data } = await supabase.from('designs').select('*').eq('order_id', order.id);
+        setDesigns(data || []);
+      };
+      fetchDesigns();
+    }
+  }, [order]);
+
+  const handleUploadDesign = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !order) return;
+    setIsUploading(true);
+    
+    const fileExt = file.name.split('.').pop();
+    const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`;
+    
+    const { error: uploadError } = await supabase.storage
+      .from('designs')
+      .upload(fileName, file);
+      
+    if (uploadError) {
+      alert(`Gagal upload: ${uploadError.message}`);
+      setIsUploading(false);
+      return;
+    }
+
+    const { data: publicUrlData } = supabase.storage.from('designs').getPublicUrl(fileName);
+    
+    const formData = new FormData();
+    formData.set('name', file.name);
+    formData.set('file_url', publicUrlData.publicUrl);
+    formData.set('file_type', 'Reference');
+    formData.set('order_id', order.id);
+
+    await createDesignRecord({ status: 'idle' }, formData);
+    
+    // Refresh list
+    const { data } = await supabase.from('designs').select('*').eq('order_id', order.id);
+    setDesigns(data || []);
+    setIsUploading(false);
+  };
 
   // Tutup modal otomatis setelah sukses
   useEffect(() => {
@@ -225,6 +275,65 @@ function OrderModal({ order, onClose }: OrderModalProps) {
                   }}
                 />
               </div>
+            </div>
+          </div>
+
+          {/* Desain Terkait */}
+          <div
+            className="rounded-[8px] p-4 flex flex-col gap-4"
+            style={{
+              backgroundColor: '#26272d',
+              boxShadow: 'rgba(255,255,255,0.08) 0 0 0 1px inset',
+            }}
+          >
+            <div className="flex items-center justify-between">
+              <p className="text-[11px] uppercase tracking-widest" style={{ color: '#acadae', fontFamily: FONT_UI }}>
+                <ImageIcon size={10} strokeWidth={1.5} className="inline mr-1" />
+                Desain Terkait
+              </p>
+              <button
+                onClick={() => fileInputRef.current?.click()}
+                disabled={isUploading}
+                className="text-[11px] font-medium flex items-center gap-1 transition-colors"
+                style={{ color: '#83c3ff', fontFamily: FONT_UI }}
+              >
+                {isUploading ? <Loader2 size={12} className="animate-spin" /> : <UploadCloud size={12} />}
+                {isUploading ? 'Mengunggah...' : 'Upload Desain'}
+              </button>
+              <input 
+                type="file" 
+                ref={fileInputRef} 
+                onChange={handleUploadDesign}
+                className="hidden" 
+                accept="image/*,.pdf"
+              />
+            </div>
+
+            <div className="flex flex-col gap-2">
+              {designs.length === 0 ? (
+                <div className="flex flex-col items-center justify-center py-6 border border-dashed rounded-[6px]" style={{ borderColor: '#34353c' }}>
+                  <ImageIcon size={20} className="text-[#acadae] opacity-30 mb-2" />
+                  <span className="text-[12px] text-[#acadae]" style={{ fontFamily: FONT_UI }}>Belum ada desain untuk order ini</span>
+                </div>
+              ) : (
+                <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
+                  {designs.map(d => (
+                    <a 
+                      key={d.id} 
+                      href={d.file_url} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="aspect-square rounded-[6px] overflow-hidden relative group block"
+                      style={{ backgroundColor: '#141415', boxShadow: 'rgba(255,255,255,0.08) 0 0 0 1px inset' }}
+                    >
+                      <img src={d.file_url} alt={d.name} className="w-full h-full object-cover transition-opacity group-hover:opacity-75" />
+                      <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/40">
+                        <ImageIcon size={16} color="#fff" />
+                      </div>
+                    </a>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
 
