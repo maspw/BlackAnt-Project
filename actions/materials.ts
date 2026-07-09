@@ -3,6 +3,7 @@
 import { z } from 'zod';
 import { revalidatePath } from 'next/cache';
 import { createServerSupabaseClient } from '@/lib/supabase-server';
+import { checkAndCreateStockAlerts } from './notifications';
 
 /* ══════════════════════════════════════════════════════════════
    Types
@@ -93,6 +94,9 @@ export async function restockMaterial(
     }
   }
 
+  // 4. Trigger stock alerts
+  await checkAndCreateStockAlerts();
+
   revalidatePath('/admin/bahan');
   revalidatePath('/admin/dashboard');
 
@@ -153,7 +157,9 @@ export async function addMaterial(
   }
 
   revalidatePath('/admin/bahan');
-  revalidatePath('/admin/dashboard');
+  // Trigger stock alerts
+  await checkAndCreateStockAlerts();
 
-  return { status: 'success', message: `Bahan "${name}" berhasil ditambahkan.` };
+  revalidatePath('/admin/bahan');
+  return { status: 'success', message: 'Data bahan berhasil diperbarui.' };
 }

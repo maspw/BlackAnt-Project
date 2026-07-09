@@ -4,6 +4,7 @@ import { z } from 'zod';
 import { revalidatePath } from 'next/cache';
 import { createServerSupabaseClient } from '@/lib/supabase-server';
 import type { OrderStatus } from '@/types/database';
+import { checkAndCreateDeadlineAlerts, checkAndCreateStockAlerts } from './notifications';
 
 /* ─── Validation ─────────────────────────────────────────────── */
 const UpdateStatusSchema = z.object({
@@ -58,6 +59,11 @@ export async function updateOrderStatus(
 
   if (error) {
     return { status: 'error', message: `Gagal update: ${error.message}` };
+  }
+
+  // Check alerts
+  if (status === 'process' || status === 'qc' || status === 'pending') {
+    await checkAndCreateDeadlineAlerts();
   }
 
   // Invalidate halaman pesanan

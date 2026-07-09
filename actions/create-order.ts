@@ -3,6 +3,7 @@
 import { z } from 'zod';
 import { redirect } from 'next/navigation';
 import { createServerSupabaseClient } from '@/lib/supabase-server';
+import { createNewOrderNotification } from './notifications';
 import { generateOrderNumber } from '@/lib/utils-admin';
 
 /* ─── WA config ─────────────────────────────────────────────── */
@@ -97,7 +98,7 @@ export async function createOrder(
   const clientWa    = normaliseWa(whatsapp);
 
   /* ── 3. Insert order ────────────────────────────────────── */
-  const { error } = await supabase.from('orders').insert({
+  const { data: insertedOrder, error } = await supabase.from('orders').insert({
     order_number:   orderNumber,
     customer_name:  nama,
     customer_phone: clientWa,
@@ -110,13 +111,18 @@ export async function createOrder(
     dp_amount:      0,
     total_price:    null,
     deadline_date:  null,
-  });
+  }).select('id').single();
 
   if (error) {
     return {
       status: 'error',
       message: `Gagal menyimpan pesanan: ${error.message}`,
     };
+  }
+
+  // Trigger Notification
+  if (insertedOrder) {
+    await createNewOrderNotification(insertedOrder.id, nama, orderNumber);
   }
 
   /* ── 4. Redirect ke halaman sukses ──────────────────────── */
