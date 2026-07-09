@@ -16,6 +16,7 @@ import {
   CheckSquare,
   Image as ImageIcon,
   BarChart3,
+  Activity,
 } from 'lucide-react';
 
 /* ─── Nav items ─────────────────────────────────────────────── */
@@ -31,6 +32,7 @@ const navItems = [
   { label: 'Pemasok',    href: '/admin/supplier',  icon: Truck },
   { label: 'Pelanggan',  href: '/admin/pelanggan', icon: Users },
   { label: 'Keuangan',   href: '/admin/keuangan',  icon: Wallet },
+  { label: 'Audit Trail', href: '/admin/audit',    icon: Activity },
 ] as const;
 
 /* ─── Sidebar ───────────────────────────────────────────────── */

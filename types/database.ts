@@ -127,6 +127,12 @@ export interface Database {
           { foreignKeyName: "designs_order_id_fkey"; columns: ["order_id"]; referencedRelation: "orders"; referencedColumns: ["id"]; }
         ];
       };
+      activity_logs: {
+        Row: ActivityLog;
+        Insert: ActivityLogInsert;
+        Update: ActivityLogUpdate;
+        Relationships: never[];
+      };
     };
     Views: Record<string, never>;
     Functions: Record<string, never>;
@@ -356,6 +362,27 @@ export type DesignInsert = Omit<Design, 'id' | 'created_at' | 'updated_at' | 've
 };
 
 export type DesignUpdate = Partial<DesignInsert>;
+
+/* ─── Tabel: activity_logs ───────────────────────────────────── */
+export type ActivityLog = {
+  id: string;
+  user_id: string | null;
+  action: string;
+  entity_type: string;
+  entity_id: string | null;
+  old_values: any | null;
+  new_values: any | null;
+  ip_address: string | null;
+  user_agent: string | null;
+  created_at: string;
+};
+
+export type ActivityLogInsert = Omit<ActivityLog, 'id' | 'created_at'> & {
+  id?: string;
+  created_at?: string;
+};
+
+export type ActivityLogUpdate = Partial<ActivityLogInsert>;
 
 /* ─── Tabel: order_materials ─────────────────────────────────── */
 /**
